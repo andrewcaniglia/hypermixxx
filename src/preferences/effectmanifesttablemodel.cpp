@@ -23,9 +23,11 @@ EffectManifestTableModel::EffectManifestTableModel(QObject* parent,
 
 void EffectManifestTableModel::setList(const QList<EffectManifestPointer>& newList) {
     removeRows(0, m_manifests.size());
-    beginInsertRows(QModelIndex(), 0, newList.size() - 1);
-    m_manifests = newList;
-    endInsertRows();
+    if (!newList.isEmpty()) {
+        beginInsertRows(QModelIndex(), 0, newList.size() - 1);
+        m_manifests = newList;
+        endInsertRows();
+    }
 }
 
 int EffectManifestTableModel::rowCount(const QModelIndex& parent) const {

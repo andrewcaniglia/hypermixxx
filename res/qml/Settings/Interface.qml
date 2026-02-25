@@ -1333,7 +1333,7 @@ Category {
                                         id: keylockModeInput
 
                                         maxWidth: deckPane.width * 0.34
-                                        options: ["original key", "current key"]
+                                        options: ["original key", "current key", "stepped pitch"]
                                         normalizedWidth: false
 
                                         onSelectedChanged: decksTab.dirty = true

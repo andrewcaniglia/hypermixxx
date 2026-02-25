@@ -2,6 +2,7 @@
 
 #include <QPair>
 #include <QtDebug>
+#include <cmath>
 
 #include "control/controlobject.h"
 #include "control/controlpotmeter.h"
@@ -15,7 +16,18 @@
 constexpr bool kEnableDebugOutput = false;
 
 static const double kLockCurrentKey = 1;
+static const double kSteppedPitch = 2;
 static const double kKeepUnlockedKey = 1;
+
+static double calculateSteppedSemitones(double tempoRatio) {
+    double speedChangePercent = (tempoRatio - 1.0) * 100.0;
+    if (speedChangePercent >= 1.0) {
+        return std::floor((speedChangePercent - 1.0) / 10.0) + 1.0;
+    } else if (speedChangePercent <= -1.0) {
+        return -(std::floor((-speedChangePercent - 1.0) / 10.0) + 1.0);
+    }
+    return 0.0;
+}
 
 KeyControl::KeyControl(const QString& group,
         UserSettingsPointer pConfig)
@@ -55,6 +67,7 @@ KeyControl::KeyControl(const QString& group,
     m_pPitchAdjust->setSmallStepCount(60);
 
     m_keylockMode->setButtonMode(mixxx::control::ButtonMode::Toggle);
+    m_keylockMode->setStates(3); // 0=LockOriginalKey, 1=LockCurrentKey, 2=SteppedPitch
 
     m_keyunlockMode->setButtonMode(mixxx::control::ButtonMode::Toggle);
 
@@ -191,7 +204,20 @@ void KeyControl::updateRate() {
 
     if (m_pKeylock->toBool()) {
         if (!m_pitchRateInfo.keylock) {                    // Enabling keylock
-            if (m_keylockMode->get() == kLockCurrentKey) { // Lock at current pitch
+            if (m_keylockMode->get() == kSteppedPitch) {   // Stepped pitch mode
+                double semitones = calculateSteppedSemitones(
+                        m_pitchRateInfo.tempoRatio);
+                speedSliderPitchRatio =
+                        KeyUtils::semitoneChangeToPowerOf2(semitones);
+                if constexpr (kEnableDebugOutput) {
+                    qDebug() << "   LOCKING stepped pitch";
+                    qDebug() << "   | semitones ="
+                             << semitones;
+                    qDebug() << "   | speedSliderPitchRatio ="
+                             << speedSliderPitchRatio;
+                    qDebug() << "   |";
+                }
+            } else if (m_keylockMode->get() == kLockCurrentKey) { // Lock at current pitch
                 speedSliderPitchRatio = m_pitchRateInfo.tempoRatio;
                 if constexpr (kEnableDebugOutput) {
                     qDebug() << "   LOCKING current key";
@@ -211,14 +237,30 @@ void KeyControl::updateRate() {
                 }
             }
             m_pitchRateInfo.keylock = true;
-        } else { // Key already locked, nothing to do
-            if constexpr (kEnableDebugOutput) {
-                qDebug() << "   LOCKED";
-                qDebug() << "   | speedSliderPitchRatio =";
-                qDebug() << "   |   pitchRatio       " << m_pitchRateInfo.pitchRatio;
-                qDebug() << "   |   / pitchTweakRatio" << m_pitchRateInfo.pitchTweakRatio;
-                qDebug() << "   | =" << qSetRealNumberPrecision(18) << speedSliderPitchRatio;
-                qDebug() << "   |";
+        } else { // Key already locked
+            if (m_keylockMode->get() == kSteppedPitch) {
+                // Recompute stepped pitch on every rate change
+                double semitones = calculateSteppedSemitones(
+                        m_pitchRateInfo.tempoRatio);
+                speedSliderPitchRatio =
+                        KeyUtils::semitoneChangeToPowerOf2(semitones);
+                if constexpr (kEnableDebugOutput) {
+                    qDebug() << "   LOCKED stepped pitch";
+                    qDebug() << "   | semitones ="
+                             << semitones;
+                    qDebug() << "   | speedSliderPitchRatio ="
+                             << speedSliderPitchRatio;
+                    qDebug() << "   |";
+                }
+            } else {
+                if constexpr (kEnableDebugOutput) {
+                    qDebug() << "   LOCKED";
+                    qDebug() << "   | speedSliderPitchRatio =";
+                    qDebug() << "   |   pitchRatio       " << m_pitchRateInfo.pitchRatio;
+                    qDebug() << "   |   / pitchTweakRatio" << m_pitchRateInfo.pitchTweakRatio;
+                    qDebug() << "   | =" << qSetRealNumberPrecision(18) << speedSliderPitchRatio;
+                    qDebug() << "   |";
+                }
             }
         }
     } else {                           // !m_pKeylock

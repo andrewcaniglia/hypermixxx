@@ -19,7 +19,8 @@ enum class DisplayFormat {
 
 enum class KeylockMode {
     LockOriginalKey,
-    LockCurrentKey
+    LockCurrentKey,
+    SteppedPitch
 };
 
 enum class KeyunlockMode {

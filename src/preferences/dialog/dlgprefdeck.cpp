@@ -479,6 +479,8 @@ void DlgPrefDeck::slotUpdate() {
             static_cast<KeylockMode>(static_cast<int>(m_keylockModeControls[0]->get()));
     if (keylockMode == KeylockMode::LockCurrentKey) {
         radioButtonCurrentKey->setChecked(true);
+    } else if (keylockMode == KeylockMode::SteppedPitch) {
+        radioButtonSteppedPitch->setChecked(true);
     } else {
         radioButtonOriginalKey->setChecked(true);
     }
@@ -606,6 +608,8 @@ void DlgPrefDeck::setRateDirectionForAllDecks(bool inverted) {
 void DlgPrefDeck::slotKeyLockModeSelected(QAbstractButton* pressedButton) {
     if (pressedButton == radioButtonCurrentKey) {
         m_keylockMode = KeylockMode::LockCurrentKey;
+    } else if (pressedButton == radioButtonSteppedPitch) {
+        m_keylockMode = KeylockMode::SteppedPitch;
     } else {
         m_keylockMode = KeylockMode::LockOriginalKey;
     }
