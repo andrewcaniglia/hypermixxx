@@ -1,5 +1,5 @@
 # HYPERMIXXX
-Introduces a feature called "Stepped pitch" that increases/decreases the pitch by 1 semitone for every 10% increase/decrease in speed. 
+Introduces a feature called "Stepped pitch" that increases/decreases the pitch by 1 semitone for every 10% increase/decrease in speed, starting at 1%. 
 This keeps music compliant with the parameters of Hypercore. 
 To access, go to Preferences -> Decks -> Keylock mode -> "Stepped pitch"
 Keylock must be enabled.
