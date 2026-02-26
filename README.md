@@ -3,6 +3,7 @@ Introduces a feature called "Stepped pitch" that increases/decreases the pitch b
 This keeps music compliant with the parameters of Hypercore. 
 To access, go to Preferences -> Decks -> Keylock mode -> "Stepped pitch"
 Keylock must be enabled.
+
 <img width="814" height="25" alt="Keylock mode setting" src="https://github.com/user-attachments/assets/e3d3091d-ae35-47fa-9c9b-2c9bf593353d" />
 
 # Mixxx
