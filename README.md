@@ -6,6 +6,13 @@ Keylock must be enabled.
 
 <img width="814" height="25" alt="Keylock mode setting" src="https://github.com/user-attachments/assets/e3d3091d-ae35-47fa-9c9b-2c9bf593353d" />
 
+Also introduces multi knob manipulation:
+
+<img width="279" height="205" alt="Screenshot 2026-02-26 at 9 49 30 AM" src="https://github.com/user-attachments/assets/e8115f7d-26ef-4ae6-ab26-6c6f6e0742e3" />
+
+Option/alt click a knob to add it to the link list. When you turn a knob the linked knob(s) will turn in sympathy. Option/alt click again to make the link
+red, which causes it to do the opposite of what you do to a different knob. Option/alt click again to unlink it.
+
 # Mixxx
 
 [![GitHub latest tag](https://img.shields.io/github/tag/mixxxdj/mixxx.svg)](https://mixxx.org/download)
